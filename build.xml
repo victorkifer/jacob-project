@@ -388,7 +388,7 @@
 		<echo>Using libs in ${library.x64}</echo>
 		<echo>Using libs in ${library.x64.platformSDK}</echo>
 		<delete file="${release.file.x64.dll}" />
-		<echo>Linking to create {$release.file.x64.dll}</echo>
+		<echo>Linking to create ${release.file.x64.dll}</echo>
 		<exec executable="${linker.x64}" dir="${release.dir.x64.cpp}" failonerror="true">
 			<env key="Path" value="${MSDEV_IDE_DIR}"/>
 			<arg value="/nologo" />

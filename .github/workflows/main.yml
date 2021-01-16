@@ -9,13 +9,37 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Microsoft Visual C++ and Windows SDK
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64_x86
+        sdk: 10.0.18362.0
+        toolset: 14.28.29333
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: 8.0.265
+#     - name: Describe Environment
+#       run: Get-ChildItem 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise' -Recurse cl.exe
+    - name: Set up build config
+      run: |
+        printf '%s\n' "version=1.20" > compilation_tools.properties
+        printf '%s\n' "JDK=C\:\\hostedtoolcache\\windows\\jdk\\8.0.265\\x64" >> compilation_tools.properties
+        printf '%s\n' "MSDEV_DIR=C\\:\\\\Program Files (x86)\\\\Microsoft Visual Studio\\\\2019\\\\Enterprise\\\\VC\\\\Tools\\\\MSVC\\\\14.28.29333" >> compilation_tools.properties
+        printf '%s\n' "MSDEV_IDE_DIR=C\\:\\\\Program Files (x86)\\\\Microsoft Visual Studio\\\\2019\\\\Enterprise\\\\Common7\\\\IDE" >> compilation_tools.properties
+        printf '%s\n' "MSDEV_PLATFORM_DIR=C\\:\\\\Program Files (x86)\\\\Windows Kits\\\\10" >> compilation_tools.properties
+        printf '%s\n' "MSDEV_PLATFORM_DIR_BIN=C\\:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\bin\\\\10.0.18362.0" >> compilation_tools.properties
+        printf '%s\n' "MSDEV_PLATFORM_DIR_INC=C\\:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Include\\\\10.0.18362.0" >> compilation_tools.properties
+        printf '%s\n' "MSDEV_PLATFORM_DIR_LIB=C\\:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.18362.0" >> compilation_tools.properties
+        type compilation_tools.properties
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml
+    - name: Upload files
+      uses: actions/upload-artifact@v1
+      with:
+        name: jacob
+        path: release
